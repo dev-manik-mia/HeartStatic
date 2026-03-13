@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEARTS NGO - Humanitarian Efforts for Aid, Relief & Trusting Society</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        heartsBlue: '#1a4a8c',
+                        heartsRed: '#e11d48',
+                        heartsDark: '#0f172a',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 4s ease-in-out infinite',
+                        'scroll-v': 'scroll-v 12s linear infinite',
+                        'marquee': 'marquee 30s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        'scroll-v': {
+                            '0%': { transform: 'translateY(100%)' },
+                            '100%': { transform: 'translateY(-100%)' },
+                        },
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .page-section { display: none; opacity: 0; }
+        .page-section.active { display: block; opacity: 1; transition: opacity 0.5s ease-in-out; }
+        .glass { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(15px); }
+        .rounded-enterprise { border-radius: 2rem; }
+        
+        .bg-banner { 
+            background-size: cover; background-position: center;
+            min-height: 400px; display: flex; align-items: center; position: relative;
+        }
+        .banner-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to right, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.6));
+        }
+
+        /* Vertical Timeline */
+        .v-timeline { position: relative; padding-left: 3rem; }
+        .v-timeline::before {
+            content: ''; position: absolute; left: 14px; top: 0; width: 2px; height: 100%; background: #e11d48;
+        }
+        .v-dot {
+            position: absolute; left: 0; width: 30px; height: 30px; background: white; border: 4px solid #e11d48; border-radius: 50%;
+            box-shadow: 0 0 15px rgba(225, 29, 72, 0.3);
+            transform: translateX(1px);
+        }
+
+        /* Navigation underline */
+        .nav-link { position: relative; cursor: pointer; }
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: #e11d48; transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        /* Ticker Container */
+        .v-scroll-container { height: 48px; overflow: hidden; position: relative; }
+        
+        /* Grid Stretch to fix overlap */
+        .grid-card-fix { display: grid; height: 100%; grid-template-rows: 1fr auto; }
+        .flex-card-fix { display: flex; flex-direction: column; height: 100%; }
+        .flex-grow-fix { flex-grow: 1; }
+    </style>
+</head>
+<body class="font-sans text-slate-900 bg-white overflow-x-hidden selection:bg-heartsRed selection:text-white">
+
+    <!-- NAVIGATION -->
+    <nav class="fixed w-full z-[100] glass shadow-xl border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 lg:px-8">
+            <div class="flex justify-between h-20 md:h-24">
+                <div class="flex items-center space-x-3 cursor-pointer group" onclick="showPage('home')">
+                    <div class="w-20 h-20 md:w-20 items-center justify-center text-white transition duration-500 group-hover:rotate-6">
+                        <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_HABXcG6OlGszqJAXBxxepzyUreOb0c75nWTnt9GiC2faUaabWxvWipoW5mQxEIwFNrvkLq2CvBgywCBGa1aa2zqqvIVxDcSgCb-okc-w5uhJzciD7zXxPIMiyvdXDl9Fcc-aKAks99wkD0RnnhM5LqtwCyu4vl-5AupwMIA6s5-9zoshYYgr3QTOfelHHssjMolZK07SPas-e2Pua0qHqWHDg1ZdPEJulsHe6BrsKwhGSnkaCPdfrH0cIa3xxnEqzKZj3tk4mxyC91fEagChP887E7FTejHLfxZDNmR--f0zLybC2FXG5Fb_qdK5Tg9n18gGoocP5FE5mILJEvz2RicE8n-OczfHt9zmFxa6tr0m1nzdXHEHWiP0kP-udh0q56gh7_U013R-YYGJ5--CuEEUdzUVfUAlzzlZ2veHOj17qWfIZ4eDiyY3d1XV9XWTrepbufcn-SQbGqejDp5LxUymsBbzKL8cqdzuAFOtHrQ-TFwzupivMkoKgY-LWLSsTIA1MudZ2fNVCSknnt4j1IdoWVZ4eONHptKvE8qIGEehCZ4Umo-mGaNw-UeUH0fTK0O3wxFUCoeGXgUXZofwsu8YXMgzrxBjO3i1C-Ye9f_CGB4klesmNA4OcH3-HpF412T_J4sY9b5_LqXyVuUwy76ejOvvV3JqfvcARAIL6LY4o_-7wRhcS-noRSWtPIslrSBBbmDfwltSu8mByJ0dNzMi0PwmvboYno84LbgkvymoAaLiDKdGIBJb8bSoa2sSylZ29k-EwrhQ0__tR734Ks9kTOPRCPAO3ZPj5GQu9rqhLLPBaQrdIfK_avUDzI83i8X4h1mTB8kwV3YIJ3a7MwDkVNk8z7rCqB20v3Wlm0e_A-X9O5ssApMXrqYDf_FcZWyiV_GzxaP6ltCgAaVIXBW_pB5zoljzeVlPlN_QYVFX6pX86vlCMEyhXeo44zshJop1AZP0HMRu1NSUFlm4lIHgykYjuXyHLTgPKAI1x8_cSmlwbLHFmC16nbMX2FOdvFsnbDioPh4Bjf-snZ6Y5_W7w_94u7YuIwIpBeoQ=w2880-h1624?auditContext=forDisplay" class="aspect-[4/5] object-cover" alt="Impact">
+                    </div>
+                    <div>
+                        <span class="text-lg md:text-xl font-black text-heartsBlue leading-none block uppercase tracking-tighter">HEARTS</span>
+                        <p class="text-[8px] md:text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Reg: S-14396/2026</p>
+                    </div>
+                </div>
+
+                <div class="hidden lg:flex items-center space-x-6 xl:space-x-8">
+                    <a onclick="showPage('home')" class="nav-link text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-heartsRed transition">Home</a>
+                    <a onclick="showPage('about')" class="nav-link text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-heartsRed transition">About Us</a>
+                    <a onclick="showPage('programs')" class="nav-link text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-heartsRed transition">Programs</a>
+                    <a onclick="showPage('projects')" class="nav-link text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-heartsRed transition">Projects</a>
+                    <a onclick="showPage('news')" class="nav-link text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-heartsRed transition">News</a>
+                    <a onclick="showPage('gallery')" class="nav-link text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-heartsRed transition">Gallery</a>
+                    <a onclick="showPage('volunteer')" class="nav-link text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-heartsRed transition">Volunteer</a>
+                    <a onclick="showPage('contact')" class="nav-link text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-heartsRed transition">Contact</a>
+                    <button onclick="showPage('donate')" class="bg-heartsRed text-white px-6 py-2.5 rounded-xl font-black text-[10px] hover:bg-heartsDark transition shadow-lg uppercase tracking-widest">Donate</button>
+                </div>
+
+                <button class="lg:hidden text-slate-600" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MOBILE MENU -->
+    <div id="mobile-menu" class="hidden fixed inset-0 z-[150] bg-white p-10 flex flex-col space-y-6 text-center justify-center">
+        <button class="absolute top-8 right-8 text-4xl" onclick="toggleMobileMenu()">&times;</button>
+        <a onclick="showPage('home')" class="text-2xl font-black uppercase tracking-tighter">Home</a>
+        <a onclick="showPage('about')" class="text-2xl font-black uppercase tracking-tighter">About Us</a>
+        <a onclick="showPage('programs')" class="text-2xl font-black uppercase tracking-tighter">Programs</a>
+        <a onclick="showPage('projects')" class="text-2xl font-black uppercase tracking-tighter">Projects</a>
+        <a onclick="showPage('news')" class="text-2xl font-black uppercase tracking-tighter">News</a>
+        <button onclick="showPage('donate')" class="bg-heartsRed text-white py-5 rounded-2xl text-xl font-black uppercase">Donate Now</button>
+    </div>
+
+    <!-- BREADCRUMB HEADER CONTAINER -->
+    <div id="page-header-container" class="hidden pt-20 md:pt-24">
+        <div class="bg-banner" id="banner-img">
+            <div class="banner-overlay"></div>
+            <div class="relative z-10 max-w-7xl mx-auto px-4 lg:px-8 text-white w-full">
+                <nav class="flex items-center text-[9px] font-black uppercase tracking-[0.4em] text-heartsRed mb-6 bg-white/10 w-fit px-5 py-1.5 rounded-full backdrop-blur-md">
+                    <span class="cursor-pointer hover:text-white transition" onclick="showPage('home')">Home</span>
+                    <i class="fas fa-chevron-right mx-3 text-[7px] opacity-40"></i>
+                    <span id="breadcrumb-current" class="text-white uppercase tracking-widest">CURRENT</span>
+                </nav>
+                <h1 id="banner-title" class="text-4xl md:text-6xl font-black tracking-tighter uppercase leading-tight">Page Title</h1>
+                <div class="w-20 h-1.5 bg-heartsRed rounded-full mt-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <main id="content-area">
+
+        <!-- HOME SECTION -->
+        <section id="home" class="page-section active">
+            <!-- Hero -->
+            <div class="relative h-screen flex items-center overflow-hidden">
+                <div class="absolute inset-0 bg-heartsDark">
+                    <div class="absolute inset-0 bg-gradient-to-r from-heartsDark via-heartsDark/40 to-transparent z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070" class="w-full h-full object-cover opacity-50 animate-pulse-slow scale-110" alt="Hero">
+                </div>
+                <div class="relative z-20 max-w-7xl mx-auto px-4 lg:px-8 text-white">
+                    <div class="max-w-4xl">
+                        <span class="bg-heartsRed px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.4em] mb-10 inline-block shadow-2xl animate-float">GOVT REGISTRATION: S-14396</span>
+                        
+                        <!-- VERTICAL NEWS TICKER -->
+                        <div class="v-scroll-container mb-8 bg-white/5 border-l-4 border-heartsRed px-5 flex items-center">
+                            <div class="animate-scroll-v font-bold uppercase text-[10px] tracking-[0.3em] text-red-400">
+                                <p class="mb-4">Mission: 1,000+ Students supported under Literacy Drive.</p>
+                                <p class="mb-4">Urgent: Flood Relief operations initiated in Sylhet.</p>
+                                <p class="mb-4">Update: Banasree HQ clinic now open 24/7 for families.</p>
+                            </div>
+                        </div>
+
+                        <h1 class="text-5xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter uppercase text-white">HEAL <span class="text-heartsRed">HEARTS</span>,<br>SAVE LIVES.</h1>
+                        <p class="text-lg md:text-2xl text-slate-200 mb-12 max-w-2xl font-medium leading-relaxed opacity-90">Bangladesh's leading humanitarian mission providing sustainable aid and technical relief.</p>
+                        <div class="flex flex-col sm:flex-row gap-6">
+                            <button onclick="showPage('donate')" class="px-10 py-5 bg-heartsRed text-white font-black rounded-2xl hover:bg-heartsDark transition shadow-2xl text-lg uppercase tracking-widest">Donate Now</button>
+                            <button onclick="showPage('about')" class="px-10 py-5 bg-white/10 backdrop-blur-2xl border border-white/20 text-white font-black rounded-2xl hover:bg-white hover:text-heartsDark transition text-lg uppercase tracking-widest">Our Story</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HOT COUNTER BOXES -->
+            <div class="relative z-30 -mt-16 max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4 px-4">
+                <div class="bg-white p-8 md:p-12 rounded-enterprise shadow-2xl text-center border-b-4 border-heartsRed">
+                    <p class="text-4xl font-black text-heartsBlue mb-2">10K+</p>
+                    <p class="text-[9px] font-black uppercase tracking-widest text-slate-400 tracking-[0.3em]">Impacted Lives</p>
+                </div>
+                <div class="bg-white p-8 md:p-12 rounded-enterprise shadow-2xl text-center border-b-4 border-heartsBlue">
+                    <p class="text-4xl font-black text-heartsBlue mb-2">08</p>
+                    <p class="text-[9px] font-black uppercase tracking-widest text-slate-400 tracking-[0.3em]">MoA Goals</p>
+                </div>
+                <div class="bg-white p-8 md:p-12 rounded-enterprise shadow-2xl text-center border-b-4 border-heartsRed">
+                    <p class="text-4xl font-black text-heartsBlue mb-2">64</p>
+                    <p class="text-[9px] font-black uppercase tracking-widest text-slate-400 tracking-[0.3em]">Districts Active</p>
+                </div>
+                <div class="bg-white p-8 md:p-12 rounded-enterprise shadow-2xl text-center border-b-4 border-heartsBlue">
+                    <p class="text-4xl font-black text-heartsBlue mb-2">100%</p>
+                    <p class="text-[9px] font-black uppercase tracking-widest text-slate-400 tracking-[0.3em]">Audit Trust</p>
+                </div>
+            </div>
+
+            <!-- Home: Who We Are -->
+            <section class="py-32 bg-white">
+                <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                    <div class="grid lg:grid-cols-2 gap-20 items-center">
+                        <div class="relative">
+                            <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_GqZoNxEQm40iYmXPbqI2XWTv2X_vxM8yM8oRnB0DDRwPUOZU6WcY-AKnRWHB6iBwb1C1h_hp4Ny156JnHrsmrO3Y7idYBvVSY8n8B2G5q7ngngWiNKp-Z1uKRmZkbQOP1ecJ2Zu8qosyhizQxg_oBm8pqE8dcuy8wA43oSellEPcMhBIkXJ3yqznQroE518mIDRjy_uMb3uwCtVi2KdO5PzN3LZcKUP7yEtMlXNtlHU-I_dPJ8kNMwwycmN9H6_pPeRA0JWiwUblLysRsiGT8oGNjYkeO5e1jzDLs_hifwmVuiO_Axirp0HIk8B2orOIr2B1Gtq5-cqStWn_tjUnDGn8wCXiyvElnzDUzj40ZPefl4_bwuU2Fns58Z08I8s621eznRkfW8M8aodVFDRFed0lMrofKPntG8M9Nl88ER0vvGpzlAWxBzW_zYkwAo4OGDECXylFhN8xX_X7LLb9M8uDQ8n0cy4Es24SrBHBRBP6aRK_pb981GyrJANfBv21mk0KYAhqAIZ36nDyT8dJcaYFHy32xm8Cc910ierhfZzYZS_nTl01ODWT4Z6ZDixlzqVEReBky2MJ3s1sGVv1YNQcnjpZ9Ts0wqk6rtZ4TVSZf7JplwSXnEP7VrtoyMVnmVwzfbprPkpbBa_2c9a4h9hw3PJVeMwspY48i-zUpL5WTKpn1bsbPzAzs26Tvns2VtOiOUcO0fS-5L5eiEUymue9rAjHtYZntqO8Y7HiNSWli8ZSrJyIPUXUZIeBwfxhfxFtg04IyRo6x2ppkUXUYN0qfTnJNCBua17191Q2XaydaZFAyZDUoO4fToah_gPEjkb0GN3Zj3RY3DDrOGUH-uZgPHRse944dSabaAHcU4y1XqjnPhh3nUAS-AVzs0XFHFDIXbdNSbHF7apsTISrIvKB0hKD9PQvn-KmDwk0XZrfIqEsJxIBCyXMWC0GQWODRSrMSMOo1iqZlKj0fqijdkTNk5B-5Ji_3Wqic0ulWaAo-ReoRvje9T7p9H8qmqPdBBzdNM3quxb4eKqyeDC5sK8orzKPW-gKZ5QWmX=w2880-h1624?auditContext=forDisplay" class="aspect-[4/5] object-cover rounded-enterprise shadow-2xl" alt="Impact">
+                            <div class="absolute -bottom-8 -right-8 bg-heartsDark p-12 rounded-enterprise text-white shadow-3xl max-w-[320px]">
+                                <i class="fas fa-heart text-heartsRed text-4xl mb-6 block animate-float"></i>
+                                <h4 class="text-xl font-black leading-tight tracking-tighter">From Hearts to Hope</h4>
+                            </div>
+                        </div>
+                        <div class="space-y-10">
+                            <span class="text-heartsRed font-black uppercase text-[10px] tracking-[0.5em] block">Legacy of Integrity</span>
+                            <h2 class="text-5xl md:text-6xl font-black text-slate-900 leading-[1.1] tracking-tighter">BORN FOR SERVICE.</h2>
+                            <p class="text-xl text-slate-500 font-medium leading-relaxed">HEARTS is a registered nonprofit society (Act XXI of 1860) providing socio-economic empowerment to poor communities.</p>
+                            <div class="grid gap-6">
+                                <div class="p-8 bg-slate-50 rounded-[2.5rem] border-l-8 border-heartsRed flex gap-6 items-center group hover:bg-heartsRed hover:text-white transition duration-500">
+                                    <div class="p-4 bg-white rounded-2xl shadow text-heartsRed text-2xl group-hover:bg-heartsDark group-hover:text-white transition"><i class="fas fa-handshake-angle"></i></div>
+                                    <div><h4 class="text-xl font-black uppercase">Mission</h4><p class="text-sm opacity-70">Socio-economic development of poor and marginalized people.</p></div>
+                                </div>
+                                <div class="p-8 bg-slate-50 rounded-[2.5rem] border-l-8 border-heartsRed flex gap-6 items-center group hover:bg-heartsRed hover:text-white transition duration-500">
+                                    <div class="p-4 bg-white rounded-2xl shadow text-heartsRed text-2xl group-hover:bg-heartsDark group-hover:text-white transition"><i class="fas fa-eye"></i></div>
+                                    <div><h4 class="text-xl font-black uppercase">Vision</h4><p class="text-sm opacity-70">A society where every individual lives with dignity and equity.</p></div>
+                                </div>
+                                <div class="p-8 bg-heartsDark rounded-[2.5rem] text-white flex gap-6 items-center group hover:bg-heartsBlue transition duration-500">
+                                    <div class="p-4 bg-slate-800 rounded-2xl shadow text-blue-400 text-2xl group-hover:bg-white group-hover:text-heartsBlue transition"><i class="fas fa-bullseye"></i></div>
+                                    <div><h4 class="text-xl font-black uppercase">Goal</h4><p class="text-sm opacity-70">Sustainable development of poor and marginalized communities.</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HOME CORE PILLARS -->
+            <section class="py-24 bg-white overflow-hidden">
+                <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                    <div class="text-center mb-20">
+                        <h2 class="text-4xl md:text-6xl font-black mb-4 uppercase tracking-tighter uppercase tracking-widest text-heartsBlue">Strategic Pillars</h2>
+                        <div class="w-16 h-1 bg-heartsRed mx-auto rounded-full"></div>
+                    </div>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8" id="home-programs-grid">
+                        <!-- JS Populate -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- INTEGRITY & MISSION -->
+            <section class="py-24 bg-slate-900 text-white relative overflow-hidden">
+                <div class="max-w-7xl mx-auto px-4 lg:px-8 relative z-10">
+                    <span class="text-heartsRed font-black uppercase text-[10px] tracking-[0.5em] block">Rural to Urban</span>
+                    <h2 class="text-4xl md:text-6xl font-black tracking-tighter leading-none uppercase" style="margin-top: 10px; margin-bottom: 40px;">Reaching Hearts, Transforming Lives Through:</h2>
+                    <p class="text-xl text-slate-400 font-medium leading-relaxed uppercase leading-relaxed font-medium"></p>
+                    <div class="grid lg:grid-cols-2 gap-20 items-center">
+                        <div class="space-y-12">
+                            
+                            <div class="grid grid-cols-2 gap-8">
+                                <div class="bg-white/5 p-8 rounded-3xl border border-white/10 group hover:bg-heartsRed transition duration-500">
+                                    <i class="fa-solid fa-heart-pulse text-heartsRed text-3xl mb-4 group-hover:text-white transition"></i>
+                                    <h4 class="text-lg font-black uppercase mb-2 text-white">Health</h4>
+                                    <p class="text-[9px] font-bold text-slate-500 uppercase group-hover:text-white">Improving healthcare access and outcomes.</p>
+                                </div>
+                                <div class="bg-white/5 p-8 rounded-3xl border border-white/10 group hover:bg-heartsBlue transition duration-500">
+                                    <i class="fa-solid fa-book text-blue-400 text-3xl mb-4 group-hover:text-white transition"></i>
+                                    <h4 class="text-lg font-black uppercase mb-2 text-white">Education</h4>
+                                    <p class="text-[9px] font-bold text-slate-500 uppercase group-hover:text-white">Providing quality education and learning opportunities.</p>
+                                </div>
+                                <div class="bg-white/5 p-8 rounded-3xl border border-white/10 group hover:bg-heartsRed transition duration-500">
+                                    <i class="fa-solid fa-hand-holding-heart text-heartsRed text-3xl mb-4 group-hover:text-white transition"></i>
+                                    <h4 class="text-lg font-black uppercase mb-2 text-white">Relief</h4>
+                                    <p class="text-[9px] font-bold text-slate-500 uppercase group-hover:text-white">Providing emergency assistance and support.</p>
+                                </div>
+                                <div class="bg-white/5 p-8 rounded-3xl border border-white/10 group hover:bg-heartsBlue transition duration-500">
+                                    <i class="fa-solid fa-hand-fist text-blue-400 text-3xl mb-4 group-hover:text-white transition"></i>
+                                    <h4 class="text-lg font-black uppercase mb-2 text-white">Empowerment</h4>
+                                    <p class="text-[9px] font-bold text-slate-500 uppercase group-hover:text-white">Empowering communities and individuals.</p>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="space-y-12">
+                            
+                            <div class="grid grid-cols-2 gap-8">
+                                
+                                <div class="bg-white/5 p-8 rounded-3xl border border-white/10 group hover:bg-heartsRed transition duration-500">
+                                    <i class="fa-solid fa-user-graduate text-heartsRed text-3xl mb-4 group-hover:text-white transition"></i>
+                                    <h4 class="text-lg font-black uppercase mb-2 text-white">Skills Development</h4>
+                                    <p class="text-[9px] font-bold text-slate-500 uppercase group-hover:text-white">Enhancing skills and capabilities.</p>
+                                </div>
+                                <div class="bg-white/5 p-8 rounded-3xl border border-white/10 group hover:bg-heartsBlue transition duration-500">
+                                    <i class="fa-solid fa-leaf text-blue-400 text-3xl mb-4 group-hover:text-white transition"></i>
+                                    <h4 class="text-lg font-black uppercase mb-2 text-white">Environment</h4>
+                                    <p class="text-[9px] font-bold text-slate-500 uppercase group-hover:text-white">Promoting environmental sustainability and conservation.</p>
+                                </div>
+                                <div class="bg-white/5 p-8 rounded-3xl border border-white/10 group hover:bg-heartsRed transition duration-500">
+                                    <i class="fa-solid fa-ribbon text-heartsRed text-3xl mb-4 group-hover:text-white transition"></i>
+                                    <h4 class="text-lg font-black uppercase mb-2 text-white">Awareness</h4>
+                                    <p class="text-[9px] font-bold text-slate-500 uppercase group-hover:text-white">Raising awareness and promoting understanding.</p>
+                                </div>
+                                <div class="bg-white/5 p-8 rounded-3xl border border-white/10 group hover:bg-heartsBlue transition duration-500">
+                                    <i class="fa-solid fa-people-group text-blue-400 text-3xl mb-4 group-hover:text-white transition"></i>
+                                    <h4 class="text-lg font-black uppercase mb-2 text-white">Community</h4>
+                                    <p class="text-[9px] font-bold text-slate-500 uppercase group-hover:text-white">Building strong and resilient communities.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="relative hidden lg:block">
+                            <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2070" class="aspect-square object-cover rounded-[5rem] shadow-2xl opacity-70 scale-105" alt="Service">
+                        </div> -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- RECENT ACTIVITIES & NEWS -->
+            <section class="py-24 bg-white border-y">
+                <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                        <div>
+                            <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none">Mission Updates</h2>
+                            <p class="text-slate-400 font-medium mt-4 uppercase text-[10px] tracking-widest tracking-[0.3em]">Tactical reports from mission field.</p>
+                        </div>
+                        <button onclick="showPage('news')" class="bg-heartsDark text-white px-10 py-4 rounded-xl font-black uppercase text-[9px] tracking-widest hover:bg-heartsRed transition shadow-xl uppercase">Press Center</button>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-12" id="home-news-grid">
+                        <!-- JS Populate -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- SUCCESS STORIES -->
+            <section class="py-24 bg-slate-50">
+                <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h2 class="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tighter uppercase tracking-widest">Impact Evidence</h2>
+                        <div class="w-20 h-1 bg-heartsRed mx-auto rounded-full"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-8" id="home-stories-grid">
+                        <!-- JS Populate -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ONGOING PROJECTS -->
+            <section class="py-24 bg-white">
+                <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h2 class="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tighter uppercase tracking-widest text-heartsBlue">Active Projects</h2>
+                        <div class="w-20 h-1 bg-heartsRed mx-auto rounded-full"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-8" id="home-projects-grid">
+                        <!-- JS Populate -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- CALL TO ACTION -->
+            <section class="py-32 bg-heartsRed text-white relative overflow-hidden text-center">
+                <div class="max-w-4xl mx-auto relative z-10 px-4">
+                    <i class="fas fa-hands-helping text-8xl mb-12 opacity-30 animate-pulse"></i>
+                    <h2 class="text-5xl md:text-7xl font-black mb-10 leading-tight uppercase tracking-tighter">Ready to Impact?</h2>
+                    <p class="text-xl md:text-2xl mb-16 opacity-90 font-medium leading-relaxed max-w-3xl mx-auto uppercase tracking-widest">Your technical expertise and time are needed in the field.</p>
+                    <button onclick="showPage('volunteer')" class="bg-white text-heartsRed px-16 py-7 rounded-[2.5rem] font-black uppercase tracking-[0.3em] hover:bg-heartsDark hover:text-white transition shadow-[0_30px_70px_rgba(0,0,0,0.3)] text-xl">Enroll Today</button>
+                </div>
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+            </section>
+        </section>
+
+        <!-- Partner Marquee -->
+            <div class="bg-white py-10 border-t border-b overflow-hidden whitespace-nowrap">
+                <div class="inline-block animate-marquee uppercase font-black text-[13px] tracking-[0.5em] text-slate-500">
+                    POVERTY REDUCTION &bull; EMERGENCY RELIEF &bull; HEALTHCARE ACCESS &bull; LEGAL AID &bull; CHILD WELFARE &bull; WOMEN EMPOWERMENT &bull; CLIMATE ACTION &bull; 
+                </div>
+                <div class="inline-block animate-marquee uppercase font-black text-[13px] tracking-[0.5em] text-slate-500">
+                    POVERTY REDUCTION &bull; EMERGENCY RELIEF &bull; HEALTHCARE ACCESS &bull; LEGAL AID &bull; CHILD WELFARE &bull; WOMEN EMPOWERMENT &bull; CLIMATE ACTION &bull; 
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT SECTION -->
+        <section id="about" class="page-section py-24">
+            <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                <!-- Org History & Right Matrix -->
+                <div class="grid lg:grid-cols-2 gap-20 items-start mb-40">
+                    <div class="space-y-12">
+                        <h2 class="text-5xl md:text-6xl font-black text-slate-900 tracking-tighter leading-none uppercase">Corporate Profile</h2>
+                        <p class="text-xl text-slate-500 font-medium leading-relaxed italic">"Healing hearts and saving lives across remote communities."</p>
+                        <p class="text-lg text-slate-500 font-medium leading-relaxed">Humanitarian Efforts for Aid, Relief & Trusting Society (HEARTS) is an institution of transparency. Registered under Act XXI of 1860 (Registration No. S-14396/2026).</p>
+                        <div class="flex flex-wrap gap-4 pt-4">
+                            <button class="bg-heartsRed text-white px-10 py-5 rounded-2xl font-black shadow-xl hover:bg-heartsDark transition flex items-center gap-4 uppercase text-xs tracking-widest"><i class="fas fa-file-pdf"></i> Brochure</button>
+                            <button class="bg-slate-900 text-white px-10 py-5 rounded-2xl font-black shadow-xl hover:bg-heartsRed transition flex items-center gap-4 uppercase text-xs tracking-widest"><i class="fas fa-file-contract"></i> Org Profile</button>
+                        </div>
+                    </div>
+                    <!-- Right Matrix -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3 gap-6">
+                        <div class="p-10 bg-heartsDark text-white rounded-[2rem] border-b-8 border-heartsRed shadow-2xl text-center">
+                            <i class="fas fa-bullseye text-heartsRed text-4xl mb-6"></i>
+                            <h4 class="text-xl font-black uppercase tracking-tighter">Goal</h4>
+                            <p class="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">Sustainability.</p>
+                        </div>
+                        <div class="p-10 bg-slate-50 rounded-[2rem] border border-slate-100 shadow-xl text-center">
+                            <i class="fas fa-handshake-angle text-heartsBlue text-4xl mb-6"></i>
+                            <h4 class="text-xl font-black uppercase tracking-tighter text-heartsBlue">Mission</h4>
+                            <p class="text-[10px] font-bold text-slate-500 mt-2 uppercase tracking-widest">Empowerment.</p>
+                        </div>
+                        <div class="p-10 bg-slate-50 rounded-[2rem] border border-slate-100 shadow-xl text-center">
+                            <i class="fas fa-eye text-heartsBlue text-4xl mb-6"></i>
+                            <h4 class="text-xl font-black uppercase tracking-tighter text-heartsBlue">Vision</h4>
+                            <p class="text-[10px] font-bold text-slate-500 mt-2 uppercase tracking-widest">Dignity.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vertical Journey Timeline -->
+                <div class="py-24 border-t">
+                    <div class="text-center mb-32">
+                        <h2 class="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tighter">Our Journey</h2>
+                        <p class="text-slate-500 font-medium uppercase text-xs tracking-widest">Evolution of HEARTS Society.</p>
+                    </div>
+                    <div class="max-w-4xl mx-auto v-timeline space-y-20" id="v-timeline-grid">
+                        <!-- JS Populate -->
+                    </div>
+                </div>
+
+                <!-- EXECUTIVE COUNCIL (9 Members) -->
+                <div class="py-24 border-t border-slate-100">
+                    <div class="text-center mb-32">
+                        <h2 class="text-4xl md:text-6xl font-black mb-6 uppercase tracking-tighter leading-none uppercase">Executive Council</h2>
+                        <p class="text-xl text-slate-500 font-medium uppercase text-[10px] tracking-widest font-black">Board of Professionals.</p>
+                    </div>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10" id="about-leadership-grid">
+                        <!-- JS Populate -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROGRAMS PAGE -->
+        <section id="programs" class="page-section py-32">
+            <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                <div class="grid lg:grid-cols-2 gap-10 mb-24" id="programs-grid-full">
+                    <!-- JS populate -->
+                </div>
+                <div class="p-16 bg-heartsDark rounded-enterprise text-white text-center shadow-3xl">
+                    <h3 class="text-4xl font-black mb-8 uppercase tracking-tighter">Sponsor a Program Sector</h3>
+                    <p class="text-xl text-slate-400 mb-12 max-w-3xl mx-auto uppercase tracking-widest">Choose a pillar to fund specific mission frameworks directly.</p>
+                    <button onclick="showPage('donate')" class="bg-heartsRed text-white px-16 py-6 rounded-3xl font-black uppercase tracking-widest hover:scale-105 transition shadow-2xl text-xl uppercase">Sponsor Mission</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS PAGE -->
+        <section id="projects" class="page-section py-32 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10 mb-24" id="projects-grid-full">
+                    <!-- JS populate -->
+                </div>
+                <div class="bg-white p-20 rounded-enterprise border-4 border-slate-100 shadow-2xl text-center uppercase tracking-widest font-black">
+                    <h3 class="text-4xl font-black mb-8 uppercase tracking-tighter text-heartsBlue leading-none">Become a Project Partner</h3>
+                    <button onclick="showPage('contact')" class="bg-heartsBlue text-white px-12 py-6 rounded-3xl font-black uppercase tracking-widest hover:bg-heartsRed transition shadow-2xl">Inquire Partnership</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALLERY PAGE -->
+        <section id="gallery" class="page-section py-32">
+            <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                <div class="text-center mb-24">
+                    <h2 class="text-5xl font-black uppercase tracking-tighter">Impact Registry</h2>
+                    <p class="text-slate-500 font-medium">Categorized visual records of verified field operations.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10" id="gallery-grid-full">
+                    <!-- JS Populate -->
+                </div>
+            </div>
+        </section>
+
+        <!-- NEWS SECTION -->
+        <section id="news" class="page-section py-32 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                <div class="grid lg:grid-cols-2 gap-16" id="news-grid-full">
+                    <!-- JS Populates -->
+                </div>
+            </div>
+        </section>
+
+        <!-- VOLUNTEER PAGE (Advanced) -->
+        <section id="volunteer" class="page-section py-32">
+            <div class="max-w-6xl mx-auto px-4 lg:px-8">
+                <div class="grid lg:grid-cols-5 gap-20 items-start mb-32">
+                    <div class="lg:col-span-2 space-y-16">
+                        <div class="space-y-6">
+                            <h2 class="text-6xl font-black tracking-tighter uppercase leading-[0.9]">JOIN THE<br><span class="text-heartsRed">FORCE</span>.</h2>
+                            <p class="text-xl text-slate-500 font-medium">Verified field membership enrollment for 2026 technical missions.</p>
+                        </div>
+                        <div class="space-y-8">
+                            <div class="p-10 bg-slate-50 rounded-3xl border-l-8 border-heartsRed shadow-sm flex items-center gap-8 group hover:shadow-xl transition">
+                                <i class="fas fa-id-badge text-4xl text-heartsRed group-hover:scale-110 transition"></i>
+                                <div><h5 class="font-black text-xs uppercase tracking-widest">Field Access ID</h5><p class="text-[10px] text-slate-400 mt-1 uppercase">Official card</p></div>
+                            </div>
+                            <div class="p-10 bg-slate-50 rounded-3xl border-l-8 border-heartsBlue shadow-sm flex items-center gap-8 group hover:shadow-xl transition">
+                                <i class="fas fa-medal text-4xl text-heartsBlue group-hover:scale-110 transition"></i>
+                                <div><h5 class="font-black text-xs uppercase tracking-widest">Merit Honor</h5><p class="text-[10px] text-slate-400 mt-1 uppercase">Certification</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-3">
+                        <form class="bg-white p-12 md:p-20 rounded-enterprise shadow-[0_80px_200px_rgba(0,0,0,0.12)] border border-slate-50" onsubmit="handleForm(event, 'Volunteer Enrollment')">
+                            <div class="grid md:grid-cols-2 gap-10 mb-10">
+                                <div class="space-y-2"><label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Full Name (NID)</label><input type="text" required class="w-full bg-slate-50 px-8 py-5 rounded-3xl outline-none focus:ring-8 focus:ring-heartsRed/5 border-none transition" placeholder="Name"></div>
+                                <div class="space-y-2"><label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Official Email</label><input type="email" required class="w-full bg-slate-50 px-8 py-5 rounded-3xl outline-none focus:ring-8 focus:ring-heartsRed/5 border-none transition" placeholder="Email"></div>
+                                <div class="space-y-2"><label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Identity Number</label><input type="text" required class="w-full bg-slate-50 px-8 py-6 rounded-3xl border-none" placeholder="NID / Passport"></div>
+                                <div class="space-y-2"><label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Blood Group</label><select required class="w-full bg-slate-50 px-8 py-6 rounded-3xl border-none"><option>O+</option><option>A+</option><option>B+</option><option>AB+</option><option>O-</option></select></div>
+                            </div>
+                            <div class="mb-12 space-y-4"><label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Motivation Statement</label><textarea rows="6" required class="w-full bg-slate-50 px-8 py-6 rounded-[2.5rem] outline-none border-none transition" placeholder="Why do you wish to serve at HEARTS?"></textarea></div>
+                            <button type="submit" class="w-full bg-heartsRed text-white py-10 rounded-[4rem] font-black text-3xl uppercase tracking-widest shadow-heartsRed/30 hover:bg-heartsDark transition hover:scale-[1.01]">Confirm Dispatch</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT PAGE -->
+        <section id="contact" class="page-section py-40">
+            <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                <div class="grid lg:grid-cols-3 gap-10 mb-32">
+                    <div class="p-16 bg-white border border-slate-100 rounded-enterprise shadow-sm text-center flex flex-col items-center group hover:shadow-3xl transition duration-500">
+                        <div class="w-20 h-20 bg-red-50 rounded-2xl flex items-center justify-center text-heartsRed text-4xl mx-auto mb-10 group-hover:bg-heartsRed group-hover:text-white transition shadow-inner"><i class="fas fa-map-location-dot"></i></div>
+                        <h4 class="text-3xl font-black mb-6 uppercase tracking-tighter">HQ</h4>
+                        <p class="text-slate-500 font-bold text-lg leading-relaxed uppercase">House-34, Road-01, Block-A, Banasree, Rampura, Dhaka</p>
+                    </div>
+                    <div class="p-16 bg-heartsDark text-white border rounded-enterprise shadow-2xl text-center group transition duration-500 flex flex-col items-center">
+                        <div class="w-20 h-20 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-400 text-4xl mx-auto mb-10 group-hover:bg-white group-hover:text-heartsBlue transition shadow-inner"><i class="fas fa-headset"></i></div>
+                        <h4 class="text-3xl font-black mb-6 uppercase tracking-tighter leading-none">Relief Line</h4>
+                        <p class="text-heartsRed font-black text-3xl mb-3 tracking-tighter leading-none mt-2">+88 01716 246 383</p>
+                    </div>
+                    <div class="p-16 bg-white border border-slate-100 rounded-enterprise shadow-sm text-center group hover:shadow-3xl transition duration-500 flex flex-col items-center">
+                        <div class="w-20 h-20 bg-pink-50 rounded-2xl flex items-center justify-center text-pink-500 text-4xl mx-auto mb-10 group-hover:bg-pink-500 group-hover:text-white transition shadow-inner"><i class="fas fa-envelope-open-text"></i></div>
+                        <h4 class="text-3xl font-black mb-6 uppercase tracking-tighter text-heartsBlue">Support</h4>
+                        <p class="text-slate-500 font-bold text-lg leading-relaxed">heartsngo2025@gmail.com</p>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-20 items-start">
+                    <div class="bg-white rounded-enterprise p-12 md:p-24 shadow-2xl border">
+                        <form onsubmit="handleForm(event, 'Message Dispatch')">
+                            <h2 class="text-4xl font-black mb-16 tracking-tighter uppercase leading-none border-b pb-8">Global Inquiry</h2>
+                            <div class="grid md:grid-cols-2 gap-10 mb-10">
+                                <input type="text" required class="w-full bg-slate-50 px-8 py-6 rounded-[2.5rem] outline-none border-none transition" placeholder="Name">
+                                <input type="email" required class="w-full bg-slate-50 px-8 py-6 rounded-[2.5rem] outline-none border-none transition" placeholder="Email">
+                            </div>
+                            <div class="space-y-10 mb-16">
+                                <select class="w-full bg-slate-50 px-10 py-6 rounded-[2.5rem] outline-none border-none transition"><option>Partnership Inquiry</option><option>Transparency query</option></select>
+                                <textarea rows="8" required class="w-full bg-slate-50 px-10 py-8 rounded-[3.5rem] outline-none border-none transition" placeholder="Query content..."></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-heartsDark text-white py-10 rounded-[4rem] font-black text-3xl uppercase shadow-2xl hover:bg-heartsRed transition uppercase tracking-widest leading-none">Dispatch Inquiry</button>
+                        </form>
+                    </div>
+                    <div class="h-full rounded-enterprise overflow-hidden shadow-2xl border-8 border-white min-h-[600px]">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14608.27218671625!2d90.4285816!3d23.7441113!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b854e4e9432d%3A0xc4805c31767228a2!2sBanasree%2C%20Dhaka!5e0!3m2!1sen!2sbd!4v1700000000000!5m2!1sen!2sbd" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DONATE PAGE -->
+        <section id="donate" class="page-section py-40">
+            <div class="max-w-7xl mx-auto px-4 lg:px-8">
+                <div class="grid lg:grid-cols-5 gap-20 items-start">
+                    <div class="lg:col-span-5 bg-white p-12 md:p-32 rounded-enterprise shadow-[0_80px_200px_rgba(0,0,0,0.18)] border border-slate-50">
+                        <h2 class="text-4xl md:text-5xl font-black mb-16 uppercase tracking-tighter leading-none border-b pb-8">Manual Giving</h2>
+                        
+                        <div class="space-y-24">
+                            <!-- Bank row (Normalized Font) -->
+                            <div class="p-12 bg-heartsDark rounded-enterprise text-white shadow-3xl relative overflow-hidden group">
+                                <div class="absolute top-0 right-0 w-64 h-64 bg-heartsRed opacity-10 rounded-full -mr-32 -mt-32 group-hover:scale-150 transition duration-700"></div>
+                                <div class="flex items-center gap-8 mb-16"><div class="w-20 h-20 bg-heartsRed rounded-3xl flex items-center justify-center text-4xl shadow-2xl"><i class="fas fa-university"></i></div><h4 class="text-4xl font-black uppercase tracking-tighter">BANK TRANSFER</h4></div>
+                                <div class="grid md:grid-cols-2 gap-8">
+                                    <div><p class="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3">Account Name</p><p class="text-lg font-bold uppercase tracking-tighter leading-tight">Humanitarian Efforts for Aid, Relief & Trusting Society</p></div>
+                                    <div><p class="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3">Account Number</p><p class="text-lg font-bold text-heartsRed tracking-widest leading-none">2192-1310-14454</p></div>
+                                    <div><p class="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3">Bank Identity</p><p class="text-lg font-bold uppercase tracking-tighter leading-none">Prime Bank PLC</p></div>
+                                    <div><p class="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3">Branch Name</p><p class="text-lg font-bold text- uppercase tracking-tighter leading-none">IBB DILKUSHA, (Islami Branch)</p></div>
+                                    <div><p class="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3">SWIFT Code</p><p class="text-lg font-bold uppercase tracking-tighter leading-tight">PRBLBDDH005</p></div>
+                                    <div><p class="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3">Routing Number</p><p class="text-lg font-bold text-heartsRed tracking-widest leading-none">170 272 892</p></div>
+                                    <div><p class="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3">Branch Code</p><p class="text-lg font-bold uppercase tracking-tighter leading-none">289</p></div>
+                                    <div><p class="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3">Branch Location</p><p class="text-lg font-bold  uppercase tracking-tighter leading-none">DILKUSHA, Dhaka</p></div>
+                                </div>
+                            </div>
+
+                            <!-- bKash Number row (Normalized Font) -->
+                            <div class="p-16 bg-slate-50 rounded-enterprise border-2 border-slate-200 shadow-inner">
+                                <div class="flex items-center gap-8 mb-12"><div class="w-24 h-24 bg-pink-500 rounded-3xl flex items-center justify-center text-white text-4xl shadow-lg shadow-pink-200"><i class="fas fa-mobile-screen-button"></i></div><h4 class="text-4xl font-black uppercase tracking-tighter text-slate-900 leading-none uppercase">bKash MERCHANT</h4></div>
+                                <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl border mb-10 text-center uppercase tracking-widest font-black"><p class="text-[11px] font-black text-slate-400 uppercase mb-4 tracking-[0.4em]">Official Payment Number</p><p class="text-6xl font-black text-pink-600 tracking-tighter uppercase leading-none">+88 01716 246 383</p></div>
+                            </div>
+
+                            <!-- bKash QR row (Separate Row) -->
+                            <div class="p-16 bg-slate-900 rounded-enterprise text-white text-center relative overflow-hidden group">
+                                <div class="absolute inset-0 bg-heartsRed opacity-5 group-hover:opacity-10 transition duration-700"></div>
+                                <h4 class="text-3xl font-black uppercase tracking-tighter flex items-center justify-center gap-6 text-pink-500 mb-16"><i class="fas fa-qrcode"></i> Scan to Pay</h4>
+                                <div class="flex flex-col md:flex-row items-center justify-center gap-20 relative z-10">
+                                    <div class="w-64 h-64 bg-white rounded-3xl p-6 shadow-3xl border-8 border-pink-600 flex items-center justify-center">
+                                        <!-- Placeholder QR SVG -->
+                                        <svg width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="opacity-10"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><line x1="7" y1="7" x2="7.01" y2="7"></line><line x1="17" y1="7" x2="17.01" y2="7"></line><line x1="17" y1="17" x2="17.01" y2="17"></line><line x1="7" y1="17" x2="7.01" y2="17"></line></svg>
+                                    </div>
+                                    <div class="text-left space-y-4">
+                                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] flex items-center gap-3"><i class="fas fa-info-circle text-pink-500"></i> HOW TO PAY</p>
+                                        <ol class="text-slate-400 font-bold text-lg space-y-4 italic uppercase">
+                                            <li>1. Open bKash App &bull; Select "Payment"</li>
+                                            <li>2. Point camera at the Code</li>
+                                            <li>3. Enter amount and secure PIN.</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Payment Verification/Feedback Form -->
+                            <div class="pt-24 border-t border-slate-100">
+                                <h4 class="text-3xl font-black mb-12 uppercase tracking-tighter leading-none border-l-8 border-heartsRed pl-8 text-heartsBlue">Payment Feedback</h4>
+                                <form class="grid md:grid-cols-2 gap-10" onsubmit="handleForm(event, 'Payment Verification Dispatch')">
+                                    <div class="space-y-2"><label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Donor Name</label><input type="text" required class="w-full bg-slate-50 p-7 rounded-2xl outline-none border-none focus:ring-8 focus:ring-heartsBlue/5 transition" placeholder="Name"></div>
+                                    <div class="space-y-2"><label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Transaction ID (TRXID)</label><input type="text" required class="w-full bg-slate-50 p-7 rounded-2xl outline-none border-none focus:ring-8 focus:ring-heartsBlue/5 transition" placeholder="Verification ID"></div>
+                                    <div class="md:col-span-2 space-y-2"><label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Mission Feedback</label><textarea rows="4" class="w-full bg-slate-50 p-10 rounded-[3rem] outline-none border-none focus:ring-8 focus:ring-heartsBlue/5 transition" placeholder="Any specific mission you want to support?"></textarea></div>
+                                    <button type="submit" class="w-full md:w-auto bg-heartsDark text-white px-20 py-8 rounded-[3.5rem] font-black text-2xl uppercase tracking-widest shadow-heartsDark/30 hover:bg-heartsRed transition">Verify Donation</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-5 pt-24 sticky top-40">
+                        <div class="p-16 bg-blue-900 rounded-enterprise text-white shadow-3xl relative overflow-hidden flex flex-col card-inner">
+                            <i class="fas fa-shield-alt text-heartsRed text-[12rem] absolute -top-10 -right-10 opacity-10 rotate-12"></i>
+                            <h4 class="text-4xl font-black mb-10 leading-[0.9] tracking-tighter uppercase leading-none">Trust Charter</h4>
+                            <p class="text-slate-300 leading-relaxed font-medium text-xl opacity-80 mb-10 uppercase leading-relaxed font-medium">As per Article X of our Society charter, 100% of contributions are allocated to mission field-aid. Annual audited reports are published for public review.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-heartsDark text-white pt-52 pb-20 border-t border-white/5 relative overflow-hidden">
+        <div class="absolute bottom-0 right-0 w-[800px] h-[800px] bg-heartsRed/5 rounded-full blur-[150px] -mb-96 -mr-96"></div>
+        <div class="max-w-7xl mx-auto px-4 lg:px-8 relative z-10">
+            <div class="grid md:grid-cols-4 gap-24 mb-10">
+                <div class="col-span-1">
+                    <div class="flex items-center gap-5 mb-12 group cursor-pointer" onclick="showPage('home')">
+                        <div class="w-20 h-20 md:w-20 items-center justify-center text-white transition duration-500 group-hover:rotate-6">
+                        <img src="https://lh3.googleusercontent.com/rd-d/ALs6j_HABXcG6OlGszqJAXBxxepzyUreOb0c75nWTnt9GiC2faUaabWxvWipoW5mQxEIwFNrvkLq2CvBgywCBGa1aa2zqqvIVxDcSgCb-okc-w5uhJzciD7zXxPIMiyvdXDl9Fcc-aKAks99wkD0RnnhM5LqtwCyu4vl-5AupwMIA6s5-9zoshYYgr3QTOfelHHssjMolZK07SPas-e2Pua0qHqWHDg1ZdPEJulsHe6BrsKwhGSnkaCPdfrH0cIa3xxnEqzKZj3tk4mxyC91fEagChP887E7FTejHLfxZDNmR--f0zLybC2FXG5Fb_qdK5Tg9n18gGoocP5FE5mILJEvz2RicE8n-OczfHt9zmFxa6tr0m1nzdXHEHWiP0kP-udh0q56gh7_U013R-YYGJ5--CuEEUdzUVfUAlzzlZ2veHOj17qWfIZ4eDiyY3d1XV9XWTrepbufcn-SQbGqejDp5LxUymsBbzKL8cqdzuAFOtHrQ-TFwzupivMkoKgY-LWLSsTIA1MudZ2fNVCSknnt4j1IdoWVZ4eONHptKvE8qIGEehCZ4Umo-mGaNw-UeUH0fTK0O3wxFUCoeGXgUXZofwsu8YXMgzrxBjO3i1C-Ye9f_CGB4klesmNA4OcH3-HpF412T_J4sY9b5_LqXyVuUwy76ejOvvV3JqfvcARAIL6LY4o_-7wRhcS-noRSWtPIslrSBBbmDfwltSu8mByJ0dNzMi0PwmvboYno84LbgkvymoAaLiDKdGIBJb8bSoa2sSylZ29k-EwrhQ0__tR734Ks9kTOPRCPAO3ZPj5GQu9rqhLLPBaQrdIfK_avUDzI83i8X4h1mTB8kwV3YIJ3a7MwDkVNk8z7rCqB20v3Wlm0e_A-X9O5ssApMXrqYDf_FcZWyiV_GzxaP6ltCgAaVIXBW_pB5zoljzeVlPlN_QYVFX6pX86vlCMEyhXeo44zshJop1AZP0HMRu1NSUFlm4lIHgykYjuXyHLTgPKAI1x8_cSmlwbLHFmC16nbMX2FOdvFsnbDioPh4Bjf-snZ6Y5_W7w_94u7YuIwIpBeoQ=w2880-h1624?auditContext=forDisplay" class="aspect-[4/5] object-cover" alt="Impact">
+                    </div>
+                        <span class="text-5xl font-black tracking-tighter uppercase">HEARTS</span>
+                    </div>
+                    <p class="text-slate-500 text-lg leading-relaxed mb-12 font-medium">Professional humanitarian innovation for community development and crisis management.</p>
+                    <!-- <div class="text-[11px] font-black text-slate-700 tracking-[0.6em] uppercase border-t border-white/5 pt-10">REGISTRATION: S-14396</div> -->
+                </div>
+                <div class="space-y-12">
+                    <h4 class="text-2xl font-black tracking-tighter uppercase text-slate-200">Governance</h4>
+                    <ul class="space-y-8 text-slate-500 font-black text-[11px] uppercase tracking-widest">
+                        <li><a href="#" class="hover:text-heartsRed transition">The Constitution</a></li>
+                        <li><a href="#" class="hover:text-heartsRed transition">Leadership Board</a></li>
+                        <li><a href="#" class="hover:text-heartsRed transition">Audited Reports</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-12">
+                    <h4 class="text-2xl font-black tracking-tighter uppercase text-slate-200">Navigation</h4>
+                    <ul class="space-y-8 text-slate-500 font-black text-[11px] uppercase tracking-widest">
+                        <li><button onclick="showPage('about')">Profile</button></li>
+                        <li><button onclick="showPage('programs')">Missions</button></li>
+                        <li><button onclick="showPage('volunteer')">Register</button></li>
+                    </ul>
+                </div>
+                <div class="space-y-12">
+                    <h4 class="text-2xl font-black tracking-tighter uppercase text-slate-200">Stay Informed</h4>
+                    <div class="flex flex-col space-y-6">
+                        <div class="flex gap-4"><input type="text" placeholder="Email" class="bg-white/5 border-none p-6 rounded-2xl w-full focus:ring-2 focus:ring-heartsRed"><button class="bg-heartsRed px-8 py-4 rounded-2xl shadow-xl"><i class="fas fa-arrow-right"></i></button></div>
+                        <div class="flex gap-8 text-3xl text-slate-700 pt-6 border-t border-white/5">
+                            <i class="fab fa-facebook-f hover:text-white cursor-pointer transition"></i>
+                            <i class="fab fa-twitter hover:text-white cursor-pointer transition"></i>
+                            <i class="fab fa-linkedin-in hover:text-white cursor-pointer transition"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-10 border-t border-white/5 text-[10px] font-black uppercase tracking-[0.6em] text-slate-800 text-center">
+                © <span id="year"></span> REGISTRATION: S-14396
+            </div>
+            </div>
+            <div class="pt-0 border-t border-white/5 text-[10px] font-black uppercase tracking-[0.6em] text-slate-800 text-center">
+                © <span id="year"></span> HEARTS - HUMANITARIAN EFFORTS FOR AID, RELIEF & TRUSTING SOCIETY. BORN FOR BANGLADESH.
+            </div>
+        </div>
+    </footer>
+
+    <!-- MISSION CONTROL (HELP DESK) -->
+    <div id="chat-widget" class="fixed bottom-12 right-12 z-[200]">
+        <button onclick="toggleChat()" class="bg-heartsRed text-white p-7 rounded-full shadow-[0_30px_70px_rgba(225,29,72,0.5)] hover:scale-110 hover:rotate-12 transition duration-500 group relative">
+            <div class="absolute inset-0 bg-heartsRed rounded-full animate-ping opacity-10"></div>
+            <i class="fas fa-hands-helping text-4xl"></i>
+        </button>
+        <div id="chat-box" class="hidden bg-white rounded-enterprise shadow-[0_50px_150px_rgba(0,0,0,0.3)] w-80 md:w-96 fixed bottom-36 right-12 overflow-hidden animate-in slide-in-from-bottom-10">
+            <div class="bg-heartsDark p-10 text-white flex justify-between items-center"><span class="font-black uppercase text-xs tracking-widest uppercase">Help Desk</span><button onclick="toggleChat()">&times;</button></div>
+            <div class="p-10 h-72 bg-slate-50 overflow-y-auto text-sm space-y-6">
+                <div class="bg-white p-6 rounded-3xl shadow-sm border-l-8 border-heartsRed text-slate-600 font-bold leading-relaxed uppercase leading-relaxed font-medium mb-8">Assalamu Alaikum! How can we facilitate your humanitarian inquiry?</div>
+                <div class="grid gap-3">
+                    <button onclick="showPage('volunteer')" class="text-left bg-white p-4 border rounded-2xl text-[9px] font-black uppercase tracking-widest hover:border-heartsRed transition uppercase tracking-widest">Enroll as Volunteer</button>
+                    <button onclick="showPage('donate')" class="text-left bg-white p-4 border rounded-2xl text-[9px] font-black uppercase tracking-widest hover:border-heartsRed transition uppercase tracking-widest">Sponsor a Project</button>
+                </div>
+            </div>
+            <div class="p-8 border-t bg-white flex gap-4">
+                <input type="text" placeholder="Type query..." class="flex-1 text-sm outline-none px-10 py-5 bg-slate-50 border-none rounded-full">
+                <button class="bg-heartsRed text-white p-5 rounded-2xl shadow-xl shadow-red-500/30 transition hover:rotate-12"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- UI CORE LOGIC -->
+    <script>
+        const LEADERSHIP_DATA = [
+            { name: "Nezam Uddin", role: "President", title: "Advocate", exp: "Social & Corporate Law Expert", li: "#" },
+            { name: "Mohammad Shamsal Islam", role: "Vice-President", title: "Service", exp: "Social Administration", li: "#" },
+            { name: "Shohrab Hossain", role: "General Secretary", title: "Engineer", exp: "Development Project Expert", li: "#" },
+            { name: "Md Tajal Islam", role: "Treasurer", title: "Advocate", exp: "Financial Law Expert", li: "#" },
+            { name: "Md Ismail Hossain", role: "Executive Member", title: "Social Work", exp: "Rural Aid Strategist", li: "#" },
+            { name: "Belal Ahmed", role: "Executive Member", title: "Engineer", exp: "Tech & Communication Expert", li: "#" },
+            { name: "Md Shariful Haque", role: "Executive Member", title: "Consultant", exp: "Policy expert", li: "#" },
+            { name: "Sultan Mahmud", role: "Executive Member", title: "Business", exp: "PR, Media & Branding Expert", li: "#" },
+            { name: "Md. Fazlur Rahman (Mamun)", role: "Executive Member", title: "Business", exp: "Strategic Growth Expert", li: "#" }
+        ];
+
+        const PROGRAMS_DATA = [
+            { title: "Economic Empowerment", i: "fa-money-bill-trend-up", d: "Micro-grants and vocational skill training for sustainable livelihoods." },
+            { title: "Emergency Response", i: "fa-helicopter-symbol", d: "Tactical relief deployment during natural calamities via board resolution." },
+            { title: "Universal Healthcare", i: "fa-clinic-medical", d: "Specialized Medicare for the physically challenged and health camps." },
+            { title: "Advocacy & Legal Aid", i: "fa-gavel", d: "Professional legal representation and human rights workshops." }
+        ];
+
+        const PROJECTS_DATA = [
+            { title: "Banasree Clinic", loc: "Dhaka", type: "HEALTH", desc: "Operational 24/7 clinic providing primary healthcare for families." },
+            { title: "Sylhet Relief Unit", loc: "Sylhet", type: "CRISIS", desc: "Phase 2 flood-resilient community housing project." },
+            { title: "Lakshmipur Agri-Aid", loc: "Lakshmipur", type: "AGRI", desc: "Technical support for marginal salinity-affected farmers." },
+            { title: "Coastal Water RO", loc: "Coastal Belt", type: "ENVIRO", desc: "Installation of Reverse Osmosis fresh water units." }
+        ];
+
+        const GALLERY_DATA = [
+            { id: 1, cat: "RELIEF", img: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09", title: "Sylhet Relief Operations", year: "2024" },
+            { id: 2, cat: "HEALTH", img: "https://images.unsplash.com/photo-1516549655169-df83a0774514", title: "Medicare Camp", year: "2025" },
+            { id: 3, cat: "EDUCATION", img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b", title: "Literacy Center Launch", year: "2026" }
+        ];
+
+        const TIMELINE_DATA = [
+            { year: "2024", title: "Operational Launch", d: "Initiated field relief in Sylhet and Lakshmipur districts." },
+            { year: "2025", title: "Executive Board", d: "Board formalized with 9 professionals under Society MoA." },
+            { year: "2026", title: "Official Certification", d: "Registration S-14396 Secured for national aid operations." }
+        ];
+
+        const STORIES_DATA = [
+            { n: "Rahima Khatun", l: "Lakshmipur", s: "Lost everything in the flood. HEARTS built my home and poultry shop." },
+            { n: "Young Sakib", l: "Dhaka Slums", s: "Used to pick rags. HEARTS scholarship put me back in school." },
+            { n: "Abdul Malek", l: "Coastal Belt", s: "Fresh water was a dream. HEARTS deep-well brought water to us." }
+        ];
+
+        function showPage(pageId) {
+            const sections = document.querySelectorAll('.page-section');
+            const header = document.getElementById('page-header-container');
+            const target = document.getElementById(pageId);
+            const breadcrumb = document.getElementById('breadcrumb-current');
+            const bannerTitle = document.getElementById('banner-title');
+            const bannerImg = document.getElementById('banner-img');
+            
+            if(!target) return;
+            sections.forEach(s => s.classList.remove('active'));
+            target.classList.add('active');
+
+            const bannerMap = {
+                about: { t: "WHO WE ARE", img: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655" },
+                programs: { t: "MISSION PILLARS", img: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c" },
+                projects: { t: "FIELD FOOTPRINT", img: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09" },
+                gallery: { t: "IMPACT REGISTRY", img: "https://images.unsplash.com/photo-1460661419201-fd4ce18a802f" },
+                news: { t: "OFFICIAL PRESS", img: "https://images.unsplash.com/photo-1504711432819-08479a55c814" },
+                volunteer: { t: "ENROLL NOW", img: "https://images.unsplash.com/photo-1559027615-cd26736f5df8" },
+                contact: { t: "GET IN TOUCH", img: "https://images.unsplash.com/photo-1423666639041-f56000c27a9a" },
+                donate: { t: "SAFE GIVING", img: "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6" }
+            };
+
+            if (pageId === 'home') { header.classList.add('hidden'); }
+            else {
+                header.classList.remove('hidden');
+                const data = bannerMap[pageId];
+                if(data && breadcrumb && bannerTitle && bannerImg) {
+                    breadcrumb.innerText = pageId.toUpperCase();
+                    bannerTitle.innerText = data.t;
+                    bannerImg.style.backgroundImage = `url('${data.img}?q=80&w=2000')`;
+                }
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        function toggleMobileMenu() { 
+            const menu = document.getElementById('mobile-menu');
+            if(menu) menu.classList.toggle('hidden'); 
+        }
+        
+        function toggleChat() { 
+            const chat = document.getElementById('chat-box');
+            if(chat) chat.classList.toggle('hidden'); 
+        }
+
+        function handleForm(e, type) { 
+            e.preventDefault(); 
+            alert(`${type} Transmitted Successfully!`); 
+            e.target.reset(); 
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('year').innerText = new Date().getFullYear();
+            
+            // Render Leadership
+            const lGrid = document.getElementById('about-leadership-grid');
+            if(lGrid) LEADERSHIP_DATA.forEach(l => {
+                lGrid.innerHTML += `
+                    <div class="bg-white p-10 rounded-enterprise border shadow-sm hover:shadow-2xl transition duration-700 group flex flex-col items-center text-center grid-stretch">
+                        <div class="w-24 h-24 bg-slate-50 rounded-[1.5rem] flex items-center justify-center text-heartsRed font-black text-4xl mb-8 group-hover:bg-heartsRed group-hover:text-white transition shadow-inner">${l.name.charAt(0)}</div>
+                        <h4 class="text-2xl font-black text-slate-900 mb-2 uppercase tracking-tighter leading-none">${l.name}</h4>
+                        <p class="text-heartsRed font-black text-[9px] uppercase tracking-[0.4em] mb-8">${l.role}</p>
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-widest border-t pt-8 w-full mb-8 leading-relaxed"><i class="fas fa-briefcase text-heartsRed mr-2"></i> ${l.title}</p>
+                        <p class="text-slate-500 font-medium text-lg flex-grow uppercase leading-relaxed">${l.exp}</p>
+                        <div class="flex gap-6 mt-auto pt-4 border-t w-full justify-center">
+                            <a href="#" class="text-slate-300 hover:text-heartsBlue transition text-2xl"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="mailto:info@hearts.org.bd" class="text-slate-300 hover:text-heartsDark transition text-2xl"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Impact Timeline
+            const tGrid = document.getElementById('v-timeline-grid');
+            if(tGrid) TIMELINE_DATA.forEach((t, i) => {
+                tGrid.innerHTML += `
+                    <div class="relative bg-white p-12 rounded-enterprise shadow-2xl border-l-8 border-heartsRed">
+                        <div class="v-dot"></div>
+                        <h3 class="text-5xl font-black text-heartsRed mb-4 leading-none uppercase tracking-tighter">${t.year}</h3>
+                        <h4 class="text-2xl font-black text-slate-900 mb-4 uppercase tracking-widest leading-none">${t.title}</h4>
+                        <p class="text-xl text-slate-500 font-medium leading-relaxed uppercase tracking-widest leading-relaxed">${t.d}</p>
+                    </div>
+                `;
+            });
+
+            // Registry Grids
+            const iGrid = document.getElementById('about-impact-grid');
+            const fullG = document.getElementById('gallery-grid-full');
+            [iGrid, fullG].forEach(container => {
+                if(container) GALLERY_DATA.forEach(g => {
+                    container.innerHTML += `
+                        <div class="relative rounded-enterprise overflow-hidden group aspect-[4/5] shadow-2xl h-full flex flex-col">
+                            <img src="${g.img}?q=80&w=1000" class="w-full h-full object-cover transition duration-1000 group-hover:scale-125" alt="registry">
+                            <div class="absolute inset-0 bg-slate-950/75 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-10">
+                                <div class="flex justify-between items-center mb-6">
+                                    <span class="bg-heartsRed text-white px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest">${g.cat}</span>
+                                    <span class="text-white text-[11px] font-black opacity-60 uppercase">${g.year}</span>
+                                </div>
+                                <h4 class="text-2xl font-black text-white uppercase tracking-tighter leading-none">${g.title}</h4>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+
+            // Home Stories
+            const homeSGrid = document.getElementById('home-stories-grid');
+            if(homeSGrid) STORIES_DATA.forEach(s => {
+                homeSGrid.innerHTML += `
+                    <div class="bg-white p-12 rounded-enterprise shadow-2xl border border-slate-50 group hover:bg-heartsDark transition-all duration-700 h-full flex flex-col">
+                        <i class="fas fa-quote-left text-heartsRed text-5xl mb-12 block group-hover:scale-125 transition"></i>
+                        <p class="text-slate-500 italic text-xl mb-16 font-medium leading-relaxed group-hover:text-slate-300 flex-grow uppercase leading-relaxed font-medium">"${s.s}"</p>
+                        <div class="flex items-center gap-6 mt-auto">
+                            <div class="w-14 h-14 bg-heartsRed rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-3xl leading-none">${s.n.charAt(0)}</div>
+                            <div class="text-left">
+                                <h5 class="text-xl font-black text-slate-900 group-hover:text-white tracking-tighter uppercase mb-1 leading-none uppercase tracking-tighter">${s.n}</h5>
+                                <p class="text-[9px] font-black text-heartsRed uppercase tracking-widest uppercase">${s.l}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Home News
+            const homeNGrid = document.getElementById('home-news-grid');
+            if(homeNGrid) for(let i=0; i<2; i++) {
+                homeNGrid.innerHTML += `
+                    <div class="bg-slate-50 p-16 rounded-enterprise border shadow-sm hover:shadow-xl transition duration-500 flex flex-col h-full">
+                        <div class="flex items-center gap-6 text-slate-400 text-[10px] font-black uppercase mb-10 tracking-[0.4em]"><i class="fas fa-calendar-day text-heartsRed"></i> March ${15+i}, 2026 • OFFICIAL</div>
+                        <h4 class="text-4xl font-black mb-8 uppercase tracking-tighter leading-tight uppercase leading-tight">HEARTS Tactical Relief Protocol Implementation in Sylhet.</h4>
+                        <button class="text-heartsDark font-black text-[10px] uppercase tracking-[0.4em] flex items-center gap-6 mt-auto group/btn leading-none">View Full Report <i class="fas fa-arrow-right group-hover/btn:translate-x-4 transition"></i></button>
+                    </div>
+                `;
+            }
+
+            // Home Programs
+            const hProgGrid = document.getElementById('home-programs-grid');
+            if(hProgGrid) PROGRAMS_DATA.forEach(p => {
+                hProgGrid.innerHTML += `
+                    <div class="bg-white p-10 rounded-enterprise shadow-xl border group hover:border-heartsRed transition duration-500 flex flex-col items-center text-center h-full">
+                        <div class="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center text-heartsRed text-3xl mb-8 group-hover:bg-heartsRed group-hover:text-white transition shadow-inner"><i class="fas ${p.i}"></i></div>
+                        <h4 class="text-xl font-black text-heartsBlue mb-4 uppercase leading-none uppercase">${p.title}</h4>
+                    </div>
+                `;
+            });
+
+            // Home Projects
+            const homePrGrid = document.getElementById('home-projects-grid');
+            if(homePrGrid) PROJECTS_DATA.slice(0,3).forEach(p => {
+                homePrGrid.innerHTML += `
+                    <div class="p-12 bg-white rounded-enterprise border-2 border-slate-50 hover:shadow-2xl transition group h-full flex flex-col">
+                        <span class="text-heartsRed font-black uppercase text-[10px] tracking-widest mb-6 block uppercase tracking-widest font-black uppercase"><i class="fas fa-map-pin"></i> ${p.loc}</span>
+                        <h4 class="text-3xl font-black mb-6 uppercase tracking-tighter group-hover:text-heartsRed transition leading-tight uppercase leading-tight uppercase tracking-tighter uppercase">${p.title}</h4>
+                        <p class="text-slate-500 font-medium text-lg leading-relaxed uppercase leading-relaxed font-medium uppercase opacity-60">${p.type} MISSION</p>
+                    </div>
+                `;
+            });
+
+            // Full Programs Grid
+            const progFullGrid = document.getElementById('programs-grid-full');
+            if(progFullGrid) PROGRAMS_DATA.forEach(p => {
+                progFullGrid.innerHTML += `
+                    <div class="flex flex-col md:flex-row gap-12 p-16 bg-white rounded-enterprise border-2 border-slate-50 shadow-2xl group hover:border-heartsRed transition duration-700 h-full items-center">
+                        <div class="w-24 h-24 bg-slate-900 rounded-[1.5rem] flex items-center justify-center text-heartsRed text-3xl shrink-0 group-hover:bg-heartsRed group-hover:text-white transition shadow-3xl"><i class="fas ${p.i}"></i></div>
+                        <div><h3 class="text-3xl font-black mb-8 uppercase tracking-tighter text-heartsBlue leading-none uppercase leading-tight uppercase">${p.title}</h3><p class="text-slate-500 leading-relaxed font-medium text-lg uppercase leading-relaxed font-medium leading-relaxed">${p.d}</p></div>
+                    </div>
+                `;
+            });
+
+            // Full Projects Grid
+            const projFullGrid = document.getElementById('projects-grid-full');
+            if(projFullGrid) PROJECTS_DATA.forEach(p => {
+                projFullGrid.innerHTML += `
+                    <div class="bg-white p-10 rounded-enterprise shadow-xl border group hover:bg-heartsDark transition duration-500 h-full flex flex-col">
+                        <div class="flex justify-between items-start mb-10">
+                            <div class="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-heartsRed text-lg group-hover:bg-heartsRed group-hover:text-white transition shadow-inner"><i class="fas fa-location-dot"></i></div>
+                            <span class="bg-blue-100 text-blue-900 px-5 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest uppercase tracking-widest leading-none leading-none">${p.type}</span>
+                        </div>
+                        <h4 class="text-2xl font-black mb-6 uppercase tracking-tighter group-hover:text-white leading-none uppercase tracking-tighter leading-none leading-none uppercase tracking-tighter leading-none uppercase tracking-tighter leading-none">${p.title}</h4>
+                        <p class="text-slate-500 font-medium text-sm leading-relaxed mb-10 group-hover:text-slate-400 flex-grow uppercase leading-relaxed font-medium leading-relaxed uppercase leading-relaxed font-medium leading-relaxed">${p.desc}</p>
+                        <div class="pt-6 border-t border-slate-100 flex items-center gap-3 text-heartsRed font-black text-[9px] uppercase tracking-widest leading-none leading-none uppercase tracking-widest leading-none leading-none uppercase tracking-widest leading-none leading-none"><i class="fas fa-map-pin"></i> ${p.loc}</div>
+                    </div>
+                `;
+            });
+
+            // Full News Grid
+            const nGridFull = document.getElementById('news-grid-full');
+            if(nGridFull) for(let i=0; i<4; i++) {
+                nGridFull.innerHTML += `
+                    <div class="bg-white rounded-enterprise border-4 border-slate-50 shadow-sm p-12 group hover:shadow-heartsRed/10 transition duration-700 h-full flex flex-col">
+                        <div class="flex items-center gap-5 text-slate-400 text-[10px] font-black uppercase mb-10 tracking-[0.5em] uppercase tracking-widest uppercase tracking-widest">
+                            <i class="fas fa-clock text-heartsRed"></i> March ${15+i}, 2026 • OFFICIAL
+                        </div>
+                        <h3 class="text-3xl font-black text-slate-900 mb-8 leading-tight uppercase tracking-tighter group-hover:text-heartsRed transition uppercase tracking-tighter leading-tight uppercase uppercase tracking-tighter leading-tight uppercase uppercase tracking-tighter leading-tight uppercase">Strategic Aid Phase ${i+1} Technical Dispatch.</h3>
+                        <p class="text-slate-500 text-lg font-medium leading-relaxed mb-10 flex-grow uppercase leading-relaxed font-medium uppercase leading-relaxed font-medium uppercase leading-relaxed font-medium">Detailed board report on mission allocation in coastal areas via technical board approval.</p>
+                        <button class="flex items-center gap-6 text-heartsDark font-black text-[10px] uppercase tracking-[0.5em] hover:text-heartsRed transition uppercase tracking-widest leading-none uppercase leading-none">Read Full Report <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
